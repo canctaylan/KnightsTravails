@@ -1,4 +1,4 @@
-# Knight's Travails
+# The Knight's Travails
 
 * To enter inputs change 'start' and 'finish' like in the example below:
 

@@ -19,7 +19,14 @@ public class KnightsTravailsController {
 	@GetMapping(value = "/api")
 	@ResponseBody
 	public String getShortestPath(@RequestParam String start, @RequestParam String end) {
-		return knightsTravailsService.findShortestDistance(start, end);
+		if (start.isBlank() || end.isBlank())
+			return "Null input parameter(s)";
+		else if(start.equals(end))
+			return "Start and locations are the same. Please enter different locations";
+		else if(!start.matches("[A-H][1-8]") || !end.matches("[A-H][1-8]"))
+			return "Invalid input parameter formats. Please enter inputs with a capital letter and a number. Ex: C3";
+		
+		return knightsTravailsService.findShortestPath(start, end);
 	}
 
 }

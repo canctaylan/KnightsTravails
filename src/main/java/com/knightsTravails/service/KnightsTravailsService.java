@@ -7,84 +7,67 @@ import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
-import com.knightsTravails.entity.Node;
+import com.knightsTravails.model.Node;
 
 @Service
 public class KnightsTravailsService {
-	// Below arrays detail all eight possible movements for a knight
+	 //All possible movements of a Knight chess piece in rows and columns
 	 private static int[] row = { 2, 2, -2, -2, 1, 1, -1, -1 };
 	 private static int[] col = { -1, 1, 1, -1, 2, -2, 2, -2 };
-
-	 // Check if (x, y) is valid chessboard coordinates.
-	 // Note that a knight cannot go out of the chessboard
-	 private static boolean isValid(int x, int y, int N) {
+	 
+	 private final int BOARD_SIZE = 8;
+	 
+	 //method to check if a movement is inside the board
+	 private static boolean isInBoard(int x, int y, int N) {
 	     return (x >= 0 && x < N) && (y >= 0 && y < N);
 	 }
 	 
-	 public String findShortestDistance(String start, String end)
+	 public String findShortestPath(String start, String end)
 	 {
-		 //N x N matrix
-	     int N = 8;
+	     int N = BOARD_SIZE;
 	     
-	     // source coordinates
-	     Node src = new Node(stringToCoord(start));
+	     Node startNode = new Node(stringToCoord(start));
 
-	     // destination coordinates
-	     Node dest = new Node(stringToCoord(end));
+	     Node destNode = new Node(stringToCoord(end));
 		 
-	     // set to check if the matrix cell is visited before or not
-	     Set<Node> visited = new HashSet<>();
+	     Set<Node> visitedNodes = new HashSet<>();
 
-	     // create a queue and enqueue the first node
-	     Queue<Node> q = new ArrayDeque<>();
-	     q.add(src);
+	     Queue<Node> queueOfNodes = new ArrayDeque<>();
+	     queueOfNodes.add(startNode);
 
-	     // loop till queue is empty
-	     while (!q.isEmpty())
+	     while (!queueOfNodes.isEmpty())
 	     {
-	         // dequeue front node and process it
-	         Node node = q.poll();
+	    	 //We retrieve the first node in the queue and remove it from the queue
+	         Node node = queueOfNodes.poll();
 
-	         int x = node.x;
-	         int y = node.y;
+	         int rowOfNode = node.row;
+	         int colOfNode = node.column;
 	         String prevNodes = node.prevNodes;
-	         int dist = node.dist;
-	         
-	         
-
-	         // if the destination is reached, return distance
-	         if (x == dest.x && y == dest.y) {
+	        
+	         if (rowOfNode == destNode.row && colOfNode == destNode.column) { //destination reached
 	        	 return coordToString(prevNodes);
-//	             return dist;
 	         }
 
-	         // skip if the location is visited before
-	         if (!visited.contains(node))
+	         if (!visitedNodes.contains(node))
 	         {
-	             // mark the current node as visited
-	             visited.add(node);
+	             visitedNodes.add(node);
 
-	             // check for all eight possible movements for a knight
-	             // and enqueue each valid movement
 	             for (int i = 0; i < row.length; i++)
 	             {
-	                 // get the knight's valid position from the current position on
-	                 // the chessboard and enqueue it with +1 distance
-	                 int x1 = x + row[i];
-	                 int y1 = y + col[i];
+	                 int nextRow = rowOfNode + row[i];
+	                 int nextColumn = colOfNode + col[i];
 
-	                 if (isValid(x1, y1, N)) {
-	                     q.add(new Node(x1, y1, dist + 1, prevNodes + " "+x1+y1));
+	                 if (isInBoard(nextRow, nextColumn, N)) {
+	                     queueOfNodes.add(new Node(nextRow, nextColumn, prevNodes + " "+nextRow+nextColumn));
 	                 }
 	             }
 	         }
 	     }
 
-	     // return infinity if the path is not possible
 	     return null;
 	 }
 	 
-	 public int[] stringToCoord(String location)
+	 public int[] stringToCoord(String location) //method to convert the String location to numerical values for easy calculation
 	 {
 		 int[] locationArray = new int[2];
 		 char letterLocation = location.charAt(0);
@@ -113,14 +96,14 @@ public class KnightsTravailsService {
 		 return locationArray;
 	 }
 	 
-	 public String coordToString(String nodeList)
+	 public String coordToString(String nodeList) //convert all numerical values into String locations
 	 {
-		 String[] arr = nodeList.trim().split(" ");
+		 String[] nodeArray = nodeList.trim().split(" ");
 		 String result = "";
-		 for(int i=0;i<arr.length;i++)
+		 for(String node : nodeArray)
 		 {
-			 String letterLocation = arr[i].substring(0,1);
-			 int numberLocation = Integer.parseInt(arr[i].substring(1))+1;
+			 String letterLocation = node.substring(0,1);
+			 int numberLocation = Integer.parseInt(node.substring(1))+1;
 			 
 			 if(letterLocation.equals("0"))
 				 result += " A" + numberLocation;
@@ -141,19 +124,5 @@ public class KnightsTravailsService {
 		 }
 		 return result.trim();
 	 }
-	 
-//	 public static void main(String[] args)
-//	 {
-//	     // N x N matrix
-//	     int N = 8;
-//	     
-//	     // source coordinates
-//	     Node src = new Node(stringToCoord("A8"));
-//
-//	     // destination coordinates
-//	     Node dest = new Node(stringToCoord("B7"));
-//
-//	     System.out.println(findShortestDistance(src, dest, N));
-//	 }
 
 }
