@@ -1,9 +1,9 @@
 # The Knight's Travails
 
-##The Assignment
+## The Assignment
 Write a program to find the shortest sequence of moves for a Knight between the starting and ending positions.
 
-##Instructions
+## Instructions
 * Run the KnightsTravailsApplication
 * To enter inputs change 'start' and 'end' like in the example below:
 
