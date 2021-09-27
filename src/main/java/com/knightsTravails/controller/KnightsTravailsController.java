@@ -18,6 +18,13 @@ public class KnightsTravailsController {
 	@Autowired
 	private KnightsTravailsService knightsTravailsService;
 
+	/**
+	 * <p>The API calculates and returns the shortest path a Knight piece
+	 * needs to travel from the starting point to the destination point</p>
+	 * @param start The Knight's starting position
+	 * @param end The Knight's destination position
+	 * @return The shortest path the Knight piece travels to destination
+	 */
 	@GetMapping(value = "/api")
 	@ResponseBody
 	public String getShortestPath(@RequestParam String start, @RequestParam String end) {
